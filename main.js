@@ -14,6 +14,7 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply("Pong!");
   } else if (interaction.commandName === "status") {
     await interaction.reply("INSERT_NODE_HERE is currently active (Sync Status: FALSE).");
+    // api call goes here
   }
 });
 
