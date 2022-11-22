@@ -5,6 +5,10 @@ const commands = [
       name: "ping",
       description: "Replies with Pong!",
     },
+    {
+      name: "status",
+      description: "Get syncing state (uptime status) of a node.",
+    },
   ];
   
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
