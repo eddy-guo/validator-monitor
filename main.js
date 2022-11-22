@@ -1,10 +1,19 @@
-require('dotenv').config()
-const { Client, GatewayIntentBits, ActionRowBuilder, SelectMenuBuilder } = require("discord.js");
+require("dotenv").config();
+const { request } = require("undici");
+const {
+  Client,
+  GatewayIntentBits,
+  ActionRowBuilder,
+  SelectMenuBuilder,
+} = require("discord.js");
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client(
+  { intents: [GatewayIntentBits.Guilds] },
+  { allowedMentions: { parse: ["users", "roles"] } }
+);
 
 client.on("ready", () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(`Logged in as ${client.user.tag}`);
 });
 
 client.on("interactionCreate", async (interaction) => {
@@ -14,22 +23,52 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply("Pong!");
   } else if (interaction.commandName === "status") {
     const row = new ActionRowBuilder().addComponents(
-      new SelectMenuBuilder().setCustomId('select').setPlaceholder('Select a validator').addOptions(
-        {
-          label: 'Secret',
-          value: 'first_option',
-        },
-        {
-          label: 'Evmos',
-          value: 'second_option',
-        },
-        {
-          label: 'Akash',
-          value: 'third_option',
-        }
-      )
-    )
-    await interaction.reply({ephemeral: true, components: [row]});
+      new SelectMenuBuilder()
+        .setCustomId("select")
+        .setPlaceholder("Select a validator")
+        .addOptions(
+          {
+            label: "Secret",
+            value: "**Secret Network**",
+          },
+          {
+            label: "Evmos",
+            value: "**Evmos**",
+          },
+          {
+            label: "Akash",
+            value: "**Akash Network**",
+          }
+        )
+    );
+    await interaction.reply({ ephemeral: true, components: [row] });
+  }
+});
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isSelectMenu()) return;
+  const selected = interaction.values[0];
+  const user = interaction.user.id;
+  var response, data, status;
+
+  selected === "**Secret Network**"
+    ? (response = await request("https://api.scrt.network/syncing"))
+    : selected === "**Evmos**"
+    ? (response = await request("https://evmos-api.polkachu.com/syncing"))
+    : selected === "**Akash Network**"
+    ? (response = await request(
+        "https://api-akash-ia.cosmosia.notional.ventures/syncing"
+      ))
+    : console.log("Interaction value does not exist.");
+
+  data = (await response.body.json())["syncing"];
+
+  data === false ? status = "offline" : status = "online";
+
+  if (interaction.customId === "select") {
+    await interaction.reply(
+      `<@${user}> The ${selected} node is currently ${status} (not syncing).`
+    );
   }
 });
 
