@@ -9,12 +9,8 @@ client.on("ready", () => {
 
 const commands = [
   {
-    name: "status",
+    name: "ping",
     description: "Replies with Pong!",
-  },
-  {
-    name: "status",
-    description: "Get syncing state (uptime status) of a node.",
   },
 ];
 
@@ -39,9 +35,6 @@ client.on("interactionCreate", async (interaction) => {
 
   if (interaction.commandName === "ping") {
     await interaction.reply("Pong!");
-  }
-  if (interaction.commandName === "status") {
-    await interaction.reply("temp");
   }
 });
 
