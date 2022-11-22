@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "register": "node -r dotenv/config commands.js",
+    "register": "node -r dotenv/config register.js",
     "start": "node -r dotenv/config main.js"
   },
   "dependencies": {
