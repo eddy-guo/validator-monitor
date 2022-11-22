@@ -49,7 +49,7 @@ client.on("interactionCreate", async (interaction) => {
   if (!interaction.isSelectMenu()) return;
   const selected = interaction.values[0];
   const user = interaction.user.id;
-  var response, data, status;
+  var response, data, status, word;
 
   selected === "**Secret Network**"
     ? (response = await request("https://api.scrt.network/syncing"))
@@ -63,11 +63,17 @@ client.on("interactionCreate", async (interaction) => {
 
   data = (await response.body.json())["syncing"];
 
-  data === false ? status = "offline" : status = "online";
+  if ( data === false) {
+    status = "online";
+    word = "not ";
+  } else {
+    status = "offline";
+    word = "";
+  }
 
   if (interaction.customId === "select") {
     await interaction.reply(
-      `<@${user}> The ${selected} node is currently ${status} (not syncing).`
+      `<@${user}>, the ${selected} node is currently ${status} (${word}syncing).`
     );
   }
 });
