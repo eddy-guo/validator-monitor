@@ -1,5 +1,6 @@
 require("dotenv").config();
 const { request } = require("undici");
+const { parse } = require("node-html-parser");
 const {
   Client,
   GatewayIntentBits,
@@ -35,21 +36,23 @@ client.on("interactionCreate", async (interaction) => {
           {
             label: "Secret",
             value: "**Secret Network**",
-          },
+          }
         )
     );
     await interaction.reply({ ephemeral: true, components: [row] });
   } else if (interaction.commandName === "rekt") {
     await interaction.reply("REKT NEWS");
-    
-    response = await request("https://rekt.news/")
-    console.log(await response.body.text())
+
+    const response = await request("https://rekt.news/");
+    const data = await response.body.text();
+    console.log(parse(data).querySelectorAll('.post-excerpt')[0].structuredText);
+    console.log(parse(data).querySelectorAll('.post-excerpt')[1].structuredText);
   }
 });
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isSelectMenu()) return;
-  
+
   const selected = interaction.values[0];
   const user = interaction.user.id;
   var response, data, status, word;
