@@ -24,6 +24,6 @@ module.exports = {
           }
         )
     );
-    await interaction.reply({ ephemeral: true, components: [row] });
+    return interaction.reply({ ephemeral: true, components: [row] });
   },
 };
