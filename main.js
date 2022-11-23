@@ -41,6 +41,9 @@ client.on("interactionCreate", async (interaction) => {
     await interaction.reply({ ephemeral: true, components: [row] });
   } else if (interaction.commandName === "rekt") {
     await interaction.reply("REKT NEWS");
+    
+    response = await request("https://rekt.news/")
+    console.log(await response.body.text())
   }
 });
 
