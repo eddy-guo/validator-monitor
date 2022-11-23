@@ -7,10 +7,7 @@ const {
   SelectMenuBuilder,
 } = require("discord.js");
 
-const client = new Client(
-  { intents: [GatewayIntentBits.Guilds] },
-  { allowedMentions: { parse: ["users", "roles"] } }
-);
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 client.on("ready", () => {
   console.log(`Logged in as ${client.user.tag}`);
@@ -28,25 +25,28 @@ client.on("interactionCreate", async (interaction) => {
         .setPlaceholder("Select a validator")
         .addOptions(
           {
-            label: "Secret",
-            value: "**Secret Network**",
+            label: "Akash",
+            value: "**Akash Network**",
           },
           {
             label: "Evmos",
             value: "**Evmos**",
           },
           {
-            label: "Akash",
-            value: "**Akash Network**",
-          }
+            label: "Secret",
+            value: "**Secret Network**",
+          },
         )
     );
     await interaction.reply({ ephemeral: true, components: [row] });
+  } else if (interaction.commandName === "rekt") {
+    await interaction.reply("REKT NEWS");
   }
 });
 
 client.on("interactionCreate", async (interaction) => {
   if (!interaction.isSelectMenu()) return;
+  
   const selected = interaction.values[0];
   const user = interaction.user.id;
   var response, data, status, word;
@@ -63,7 +63,7 @@ client.on("interactionCreate", async (interaction) => {
 
   data = (await response.body.json())["syncing"];
 
-  if ( data === false) {
+  if (data === false) {
     status = "online";
     word = "not ";
   } else {

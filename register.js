@@ -10,6 +10,10 @@ const commands = [
       name: "status",
       description: "Get syncing state (uptime status) of a node.",
     },
+    {
+      name: "rekt",
+      description: "Get DeFi news from rekt.news.",
+    },
   ];
   
   const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
