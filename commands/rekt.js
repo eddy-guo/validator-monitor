@@ -9,8 +9,8 @@ module.exports = {
   async execute(interaction) {
     const response = await request("https://rekt.news/");
     const data = await response.body.text();
-    console.log(parse(data).querySelectorAll(".post-excerpt")[0].rawText);
-    console.log(parse(data).querySelectorAll(".post-excerpt")[1].rawText);
+    console.log(parse(data).querySelectorAll(".post-excerpt")[0].rawText.slice(0, -4));
+    console.log(parse(data).querySelectorAll(".post-excerpt")[1].rawText.slice(0, -4));
     return interaction.reply("REKT RESPONSE");
   },
 };
