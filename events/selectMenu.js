@@ -8,59 +8,34 @@ module.exports = {
     if (!interaction.isSelectMenu()) return;
 
     const selected = interaction.values[0];
-    const user = interaction.user.id;
-    var response, data, status, word;
+    var response, data, status, word, image;
 
-    selected === "**Secret Network**"
-      ? (response = await request("https://api.scrt.network/syncing"))
-      : selected === "**Evmos**"
-      ? (response = await request("https://evmos-api.polkachu.com/syncing"))
-      : selected === "**Akash Network**"
-      ? (response = await request(
-          "https://api-akash-ia.cosmosia.notional.ventures/syncing"
-        ))
-      : console.log("Interaction value does not exist.");
-
+    if (selected === "Secret Network") {
+      response = await request("https://api.scrt.network/syncing");
+      image = "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186";
+    } else if (selected === "Evmos") {
+      response = await request("https://evmos-api.polkachu.com/syncing");
+      image = "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927";
+    } else if (selected === "Akash Network") {
+      response = await request("https://api-akash-ia.cosmosia.notional.ventures/syncing");
+      image = "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676";
+    }
     data = (await response.body.json())["syncing"];
 
     if (data === false) {
-      status = "online";
+      status = "ONLINE";
       word = "not ";
     } else {
-      status = "offline";
+      status = "OFFLINE";
       word = "";
     }
 
     const exampleEmbed = new EmbedBuilder()
-      .setColor(0x0099ff)
-      .setTitle("Some title")
-      .setURL("https://discord.js.org/")
-      .setAuthor({
-        name: "Some name",
-        iconURL: "https://i.imgur.com/AfFp7pu.png",
-        url: "https://discord.js.org",
-      })
-      .setDescription("Some description here")
-      .setThumbnail("https://i.imgur.com/AfFp7pu.png")
-      .addFields(
-        { name: "Regular field title", value: "Some value here" },
-        { name: "\u200B", value: "\u200B" },
-        { name: "Inline field title", value: "Some value here", inline: true },
-        { name: "Inline field title", value: "Some value here", inline: true }
-      )
-      .addFields({
-        name: "Inline field title",
-        value: "Some value here",
-        inline: true,
-      })
-      .setImage("https://i.imgur.com/AfFp7pu.png")
-      .setTimestamp()
-      .setFooter({
-        text: "Some footer text here",
-        iconURL: "https://i.imgur.com/AfFp7pu.png",
-      });
-
+      .setColor(0xe3ddff)
+      .setTitle(`${selected}`)
+      .setURL("https://google.ca")
+      .setDescription(`STATUS: **${status}** (${word}syncing).`)
+      .setThumbnail(`${image}`);
     return interaction.reply({ embeds: [exampleEmbed] });
-    // `<@${user}>, the ${selected} node is currently ${status} (${word}syncing).`
   },
 };

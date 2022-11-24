@@ -12,15 +12,15 @@ module.exports = {
         .addOptions(
           {
             label: "Akash",
-            value: "**Akash Network**",
+            value: "Akash Network",
           },
           {
             label: "Evmos",
-            value: "**Evmos**",
+            value: "Evmos",
           },
           {
             label: "Secret",
-            value: "**Secret Network**",
+            value: "Secret Network",
           }
         )
     );
