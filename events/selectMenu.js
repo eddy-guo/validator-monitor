@@ -33,8 +33,8 @@ module.exports = {
       word = "";
     }
 
-    const exampleEmbed = new EmbedBuilder()
-      .setColor(0xe3ddff)
+    const statusEmbed = new EmbedBuilder()
+      .setColor(0x000000)
       .setTitle(`${selected}`)
       .setURL(`${website}`)
       .setDescription(`STATUS: **${status}** (${word}syncing).`)
@@ -42,6 +42,6 @@ module.exports = {
     
     await interaction.deferReply();
     await interaction.deleteReply();
-    await interaction.channel.send({ embeds: [exampleEmbed] });
+    await interaction.channel.send({ embeds: [statusEmbed] });
   },
 };
