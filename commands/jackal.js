@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
 
 module.exports = {
@@ -83,7 +84,9 @@ module.exports = {
     }
 
     async function getValidatorStatus(api, address) {
-      const response = await request(`${api}/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED`);
+      const response = await request(
+        `${api}/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED`
+      );
       const data = (await response.body.json())["validators"];
       for (let i = 0; i < data.length; i++) {
         if (data[i]["operator_address"] == address) {
@@ -93,7 +96,39 @@ module.exports = {
         }
       }
     }
+    const akashRank = await getRank(akash.api, akash);
+    // const evmosRank = await getRank(evmos.api, evmos);
+    // const secretRank = await getRank(secret.api, secret);
 
-    return interaction.reply("Check terminal.");
+    const akashEmbed = new EmbedBuilder()
+      .setColor(0x000000)
+      .setTitle(`AKASH`)
+      .setURL(`https://rekt.news`)
+      .setDescription(`${akashRank}`)
+
+    // const evmosEmbed = new EmbedBuilder()
+    //   .setColor(0x000000)
+    //   .setTitle(`AKASH`)
+    //   .setURL(`https://rekt.news`)
+    //   .setDescription(`${evmosRank}`)
+
+    // const secretEmbed = new EmbedBuilder()
+    //   .setColor(0x000000)
+    //   .setTitle(`AKASH`)
+    //   .setURL(`https://rekt.news`)
+    //   .setDescription(`${secretRank}`)
+
+
+    // const akashMaxValidators = await getMaxValidators(akash.api);
+    // const evmosMaxValidators = await getMaxValidators(evmos.api);
+    // const secretMaxValidators = await getMaxValidators(secret.api);
+    // const akashBlock = await getCurrentBlock(akash.api);
+    // const evmosBlock = await getCurrentBlock(evmos.api);
+    // const secretBlock = await getCurrentBlock(secret.api);
+
+    // await getValidatorStatus(secret.api, secret.operator_address)
+    await interaction.deferReply();
+    await interaction.deleteReply();
+    await interaction.channel.send({ embeds: [akashEmbed] });
   },
 };
