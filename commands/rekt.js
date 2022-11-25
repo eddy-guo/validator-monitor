@@ -20,7 +20,9 @@ module.exports = {
     .setURL(`https://rekt.news${href}`)
     .setDescription(`${post} \n [MORE](https://rekt.news${href})`)
     .setThumbnail("https://pbs.twimg.com/profile_images/1320861494112854018/7-zRzzum_400x400.jpg")
-    .setImage("https://pbs.twimg.com/profile_banners/1297925400090337280/1607454177/1500x500");
+    .setImage("https://pbs.twimg.com/profile_banners/1297925400090337280/1607454177/1500x500")
+    .setTimestamp();
+    
 
     await interaction.deferReply();
     await interaction.deleteReply();
