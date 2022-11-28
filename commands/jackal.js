@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
-const wait = require("node:timers/promises").setTimeout;
+// const wait = require("node:timers/promises").setTimeout;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -17,6 +17,7 @@ module.exports = {
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
       api: "https://api-akash-ia.cosmosia.notional.ventures",
       status: "",
+      jailedStatus: "",
       tokens: "",
       rank: "",
       block: "",
@@ -26,6 +27,7 @@ module.exports = {
       consensus_address: "evmosvalcons1tu64shxp6m94nsc5uefs3agay8gjne0r0t0ux3",
       api: "https://evmos-api.polkachu.com",
       status: "",
+      jailedStatus: "",
       tokens: "",
       rank: "",
       block: "",
@@ -35,6 +37,7 @@ module.exports = {
       consensus_address: "secretvalcons1qz6dgmf0rgk8p08wznlnmqe7hnm4qydftvaajj",
       api: "https://api.scrt.network",
       status: "",
+      jailedStatus: "",
       tokens: "",
       rank: "",
       block: "",
@@ -107,17 +110,13 @@ module.exports = {
     secret.rank = await getRank(secret);
 
     async function getValidatorStatus(chain) {
-      const response = await request(
-        `${chain.api}/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED`
-      );
-      const data = (await response.body.json())["validators"];
-      for (let i = 0; i < data.length; i++) {
-        if (data[i]["operator_address"] == chain.operator_address) {
-          chain.status = data[i]["status"];
-          chain.tokens = data[i]["tokens"];
-        }
-      }
+      const response = await request(`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
+      const data = (await response.body.json())["validator"];
+      chain.status = data["status"];
+      chain.jailedStatus = data["jailed"];
+      chain.tokens = data["tokens"];
     }
+
     await getValidatorStatus(akash);
     await getValidatorStatus(evmos);
     await getValidatorStatus(secret);
@@ -127,7 +126,11 @@ module.exports = {
       .setTitle(`AKASH`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n AKASH RANK: ${akash.rank} \n AKASH BLOCK HEIGHT: ${akash.block}`
+        `AKASH STATUS: ${akash.status} \n 
+        AKASH JAILED STATUS: ${akash.jailedStatus} \n 
+        AKASH TOKENS: ${akash.tokens} \n 
+        AKASH RANK: ${akash.rank} \n 
+        AKASH BLOCK HEIGHT: ${akash.block}`
       );
 
     const evmosEmbed = new EmbedBuilder()
@@ -135,7 +138,11 @@ module.exports = {
       .setTitle(`EVMOS`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n EVMOS RANK: ${evmos.rank} \n EVMOS BLOCK HEIGHT: ${evmos.block}`
+        `EVMOS STATUS: ${evmos.status} \n 
+        EVMOS JAILED STATUS: ${evmos.jailedStatus} \n
+        EVMOS TOKENS: ${evmos.tokens} \n 
+        EVMOS RANK: ${evmos.rank} \n 
+        EVMOS BLOCK HEIGHT: ${evmos.block}`
       );
 
     const secretEmbed = new EmbedBuilder()
@@ -143,7 +150,11 @@ module.exports = {
       .setTitle(`SECRET`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n SECRET RANK: ${secret.rank} \n SECRET BLOCK HEIGHT: ${secret.block}`
+        `SECRET STATUS: ${secret.status} \n 
+        SECRET JAILED STATUS: ${secret.jailedStatus} \n
+        SECRET TOKENS: ${secret.tokens} \n 
+        SECRET RANK: ${secret.rank} \n 
+        SECRET BLOCK HEIGHT: ${secret.block}`
       );
 
     await interaction.deleteReply();
