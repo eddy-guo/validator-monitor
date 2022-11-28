@@ -8,6 +8,8 @@ module.exports = {
     .setName("rekt")
     .setDescription("Get DeFi news from rekt.news."),
   async execute(interaction) {
+    await interaction.deferReply();
+    
     const response = await request("https://rekt.news/");
     const data = await response.body.text();
     const title = parse(data).querySelectorAll(".post-title")[0].firstChild.rawText;
@@ -23,8 +25,6 @@ module.exports = {
     .setImage("https://pbs.twimg.com/profile_banners/1297925400090337280/1607454177/1500x500")
     .setTimestamp();
     
-
-    await interaction.deferReply();
     await interaction.deleteReply();
     await interaction.channel.send({ embeds: [rektEmbed] });
   },

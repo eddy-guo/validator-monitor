@@ -11,6 +11,7 @@ module.exports = {
     ),
   async execute(interaction) {
     await interaction.deferReply();
+    
     const akash = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
