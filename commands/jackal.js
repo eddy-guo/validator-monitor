@@ -10,6 +10,7 @@ module.exports = {
       "Get the status of our validator on other Cosmos blockchains."
     ),
   async execute(interaction) {
+    await interaction.deferReply();
     const akash = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
@@ -118,7 +119,7 @@ module.exports = {
       .setTitle(`AKASH`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n`
+        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n AKASH RANK: ${akash.rank}`
       );
 
     const evmosEmbed = new EmbedBuilder()
@@ -126,7 +127,7 @@ module.exports = {
       .setTitle(`EVMOS`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n`
+        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n EVMOS RANK: ${evmos.rank}`
       );
 
     const secretEmbed = new EmbedBuilder()
@@ -134,11 +135,9 @@ module.exports = {
       .setTitle(`SECRET`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n`
+        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n SECRET RANK: ${secret.rank}`
       );
 
-    await interaction.deferReply();
-    // await wait(4000);
     await interaction.deleteReply();
     await interaction.channel.send({ embeds: [akashEmbed] });
     await interaction.channel.send({ embeds: [evmosEmbed] });
