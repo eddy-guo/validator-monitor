@@ -59,10 +59,10 @@ module.exports = {
       return data;
     }
 
-    async function getRank(api, chain) {
-      const validators = await getValidators(api);
-      const maxValidators = await getMaxValidators(api);
-      const moreValidators = await getMoreValidators(api);
+    async function getRank(chain) {
+      const validators = await getValidators(chain.api);
+      const maxValidators = await getMaxValidators(chain.api);
+      const moreValidators = await getMoreValidators(chain.api);
       var jackalRank;
       if (
         validators["result"]["total"] ==
@@ -93,9 +93,9 @@ module.exports = {
       return jackalRank;
     }
 
-    akash.rank = await getRank(akash.api, akash);
-    evmos.rank = await getRank(evmos.api, akash);
-    secret.rank = await getRank(secret.api, akash);
+    akash.rank = await getRank(akash);
+    evmos.rank = await getRank(evmos);
+    secret.rank = await getRank(secret);
 
     async function getValidatorStatus(chain) {
       const response = await request(
