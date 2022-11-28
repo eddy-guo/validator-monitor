@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
+const wait = require('node:timers/promises').setTimeout;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -42,18 +43,39 @@ module.exports = {
         }
       }
     }
-    await getValidatorStatus(akash)
-    
+    await getValidatorStatus(akash);
+    await getValidatorStatus(evmos);
+    await getValidatorStatus(secret);
+
     const akashEmbed = new EmbedBuilder()
       .setColor(0x000000)
       .setTitle(`AKASH`)
       .setURL(`https://rekt.news`)
-      .setDescription(`AKASH STATUS: ${akash.status} \n
-                       AKASH TOKENS: ${akash.tokens} \n
-                       `);
+      .setDescription(
+        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n`
+      );
+
+    const evmosEmbed = new EmbedBuilder()
+      .setColor(0x000000)
+      .setTitle(`EVMOS`)
+      .setURL(`https://rekt.news`)
+      .setDescription(
+        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n`
+      );
+
+    const secretEmbed = new EmbedBuilder()
+      .setColor(0x000000)
+      .setTitle(`SECRET`)
+      .setURL(`https://rekt.news`)
+      .setDescription(
+        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n`
+      );
 
     await interaction.deferReply();
+    // await wait(4000);
     await interaction.deleteReply();
     await interaction.channel.send({ embeds: [akashEmbed] });
+    await interaction.channel.send({ embeds: [evmosEmbed] });
+    await interaction.channel.send({ embeds: [secretEmbed] });
   },
 };
