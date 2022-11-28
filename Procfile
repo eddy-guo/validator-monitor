@@ -1,1 +1,1 @@
-Worker: node -r dotenv/config deploy-commands.js & npm start & wait -n
+Worker: node -r dotenv/config deploy-commands.js & npm start
