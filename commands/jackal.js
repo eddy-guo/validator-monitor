@@ -11,7 +11,7 @@ module.exports = {
     ),
   async execute(interaction) {
     await interaction.deferReply();
-    
+
     const akash = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
@@ -19,6 +19,7 @@ module.exports = {
       status: "",
       tokens: "",
       rank: "",
+      block: "",
     };
     const evmos = {
       operator_address: "evmosvaloper1fpjf8aywxg9qxexfwu9lanlgw58f5fhqfu348k",
@@ -27,6 +28,7 @@ module.exports = {
       status: "",
       tokens: "",
       rank: "",
+      block: "",
     };
     const secret = {
       operator_address: "secretvaloper1vp05jj9t0u228j3ph8qav642mh84lp2q6r8vhx",
@@ -35,6 +37,7 @@ module.exports = {
       status: "",
       tokens: "",
       rank: "",
+      block: "",
     };
 
     async function getCurrentBlock(api) {
@@ -95,6 +98,10 @@ module.exports = {
       return jackalRank;
     }
 
+    akash.block = await getCurrentBlock(akash.api);
+    evmos.block = await getCurrentBlock(evmos.api);
+    secret.block = await getCurrentBlock(secret.api);
+
     akash.rank = await getRank(akash);
     evmos.rank = await getRank(evmos);
     secret.rank = await getRank(secret);
@@ -120,7 +127,7 @@ module.exports = {
       .setTitle(`AKASH`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n AKASH RANK: ${akash.rank}`
+        `AKASH STATUS: ${akash.status} \n AKASH TOKENS: ${akash.tokens} \n AKASH RANK: ${akash.rank} \n AKASH BLOCK HEIGHT: ${akash.block}`
       );
 
     const evmosEmbed = new EmbedBuilder()
@@ -128,7 +135,7 @@ module.exports = {
       .setTitle(`EVMOS`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n EVMOS RANK: ${evmos.rank}`
+        `EVMOS STATUS: ${evmos.status} \n EVMOS TOKENS: ${evmos.tokens} \n EVMOS RANK: ${evmos.rank} \n EVMOS BLOCK HEIGHT: ${evmos.block}`
       );
 
     const secretEmbed = new EmbedBuilder()
@@ -136,7 +143,7 @@ module.exports = {
       .setTitle(`SECRET`)
       .setURL(`https://rekt.news`)
       .setDescription(
-        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n SECRET RANK: ${secret.rank}`
+        `SECRET STATUS: ${secret.status} \n SECRET TOKENS: ${secret.tokens} \n SECRET RANK: ${secret.rank} \n SECRET BLOCK HEIGHT: ${secret.block}`
       );
 
     await interaction.deleteReply();
