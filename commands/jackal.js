@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
-const wait = require("node:timers/promises").setTimeout;
+// const wait = require("node:timers/promises").setTimeout;
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,7 +11,7 @@ module.exports = {
     ),
   async execute(interaction) {
     await interaction.deferReply();
-    await wait(10000);
+
     const akash = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
@@ -103,11 +103,11 @@ module.exports = {
 
     akash.block = await getCurrentBlock(akash.api);
     evmos.block = await getCurrentBlock(evmos.api);
-    secret.block = await getCurrentBlock(secret.api);
+    // secret.block = await getCurrentBlock(secret.api);
 
     akash.rank = await getRank(akash);
     evmos.rank = await getRank(evmos);
-    secret.rank = await getRank(secret);
+    // secret.rank = await getRank(secret);
 
     async function getValidatorStatus(chain) {
       const response = await request(`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
@@ -119,7 +119,7 @@ module.exports = {
 
     await getValidatorStatus(akash);
     await getValidatorStatus(evmos);
-    await getValidatorStatus(secret);
+    // await getValidatorStatus(secret);
 
     const akashEmbed = new EmbedBuilder()
       .setColor(0x000000)
@@ -145,21 +145,21 @@ module.exports = {
         EVMOS BLOCK HEIGHT: ${evmos.block}`
       );
 
-    const secretEmbed = new EmbedBuilder()
-      .setColor(0x000000)
-      .setTitle(`SECRET`)
-      .setURL(`https://rekt.news`)
-      .setDescription(
-        `SECRET STATUS: ${secret.status} \n 
-        SECRET JAILED STATUS: ${secret.jailedStatus} \n
-        SECRET TOKENS: ${secret.tokens} \n 
-        SECRET RANK: ${secret.rank} \n 
-        SECRET BLOCK HEIGHT: ${secret.block}`
-      );
+    // const secretEmbed = new EmbedBuilder()
+    //   .setColor(0x000000)
+    //   .setTitle(`SECRET`)
+    //   .setURL(`https://rekt.news`)
+    //   .setDescription(
+    //     `SECRET STATUS: ${secret.status} \n 
+    //     SECRET JAILED STATUS: ${secret.jailedStatus} \n
+    //     SECRET TOKENS: ${secret.tokens} \n 
+    //     SECRET RANK: ${secret.rank} \n 
+    //     SECRET BLOCK HEIGHT: ${secret.block}`
+    //   );
 
     await interaction.deleteReply();
     await interaction.channel.send({ embeds: [akashEmbed] });
     await interaction.channel.send({ embeds: [evmosEmbed] });
-    await interaction.channel.send({ embeds: [secretEmbed] });
+    // await interaction.channel.send({ embeds: [secretEmbed] });
   },
 };
