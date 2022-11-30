@@ -9,19 +9,18 @@ module.exports = {
 
     const selected = interaction.values[0];
     var response, data, status, word, image, website;
-
-    if (selected == "Secret Network") {
-      response = await request("https://api.scrt.network/syncing");
-      image = "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186";
-      website = "https://scrt.network/";
+    if (selected == "Akash Network") {
+      response = await request("https://api-akash-ia.cosmosia.notional.ventures/syncing");
+      image = "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676";
+      website = "https://akash.network/";
     } else if (selected == "Evmos") {
       response = await request("https://evmos-api.polkachu.com/syncing");
       image = "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927";
       website = "https://evmos.org/";
-    } else if (selected == "Akash Network") {
-      response = await request("https://api-akash-ia.cosmosia.notional.ventures/syncing");
-      image = "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676";
-      website = "https://akash.network/";
+    } else if (selected == "Secret Network") {
+      response = await request("https://api.scrt.network/syncing");
+      image = "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186";
+      website = "https://scrt.network/";
     }
     data = (await response.body.json())["syncing"];
 
