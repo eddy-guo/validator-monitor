@@ -16,6 +16,8 @@ module.exports = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
       api: "https://api-akash-ia.cosmosia.notional.ventures",
+      image: "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676",
+      banner: "https://pbs.twimg.com/profile_banners/922670090834780162/1649432360/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -26,6 +28,8 @@ module.exports = {
       operator_address: "evmosvaloper1fpjf8aywxg9qxexfwu9lanlgw58f5fhqfu348k",
       consensus_address: "evmosvalcons1tu64shxp6m94nsc5uefs3agay8gjne0r0t0ux3",
       api: "https://evmos-api.polkachu.com",
+      image: "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927",
+      banner: "https://pbs.twimg.com/profile_banners/921975418315448321/1648257433/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -36,6 +40,8 @@ module.exports = {
       operator_address: "secretvaloper1vp05jj9t0u228j3ph8qav642mh84lp2q6r8vhx",
       consensus_address: "secretvalcons1qz6dgmf0rgk8p08wznlnmqe7hnm4qydftvaajj",
       api: "https://api.scrt.network",
+      image: "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186",
+      banner: "https://pbs.twimg.com/profile_banners/3305325070/1642007357/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -123,38 +129,45 @@ module.exports = {
 
     const akashEmbed = new EmbedBuilder()
       .setColor(0x000000)
-      .setTitle(`AKASH`)
-      .setURL(`https://rekt.news`)
+      .setTitle(`JACKAL'S VALIDATOR ON AKASH`)
+      .setURL(`https://akash.network`)
       .setDescription(
-        `AKASH STATUS: ${akash.status} \n 
-        AKASH JAILED STATUS: ${akash.jailedStatus} \n 
-        AKASH TOKENS: ${akash.tokens} \n 
-        AKASH RANK: ${akash.rank} \n 
-        AKASH BLOCK HEIGHT: ${akash.block}`
-      );
+        `**STATUS**: ${akash.status} \n 
+        **JAILED STATUS**: ${akash.jailedStatus} \n 
+        **TOKENS**: ${(Math.round(akash.tokens / 1000000)).toLocaleString()} AKT \n
+        **JACKAL RANK**: ${akash.rank} out of 100 \n 
+        **BLOCK HEIGHT**: ${akash.block} \n
+        [Ping Dashboard Link](https://ping.pub/akash/staking)`
+      )
+      .setThumbnail(`${akash.image}`)
+      .setImage(`${akash.banner}`);
 
     const evmosEmbed = new EmbedBuilder()
       .setColor(0x000000)
-      .setTitle(`EVMOS`)
-      .setURL(`https://rekt.news`)
+      .setTitle(`JACKAL'S VALIDATOR ON EVMOS`)
+      .setURL(`https://evmos.org`)
       .setDescription(
-        `EVMOS STATUS: ${evmos.status} \n 
-        EVMOS JAILED STATUS: ${evmos.jailedStatus} \n
-        EVMOS TOKENS: ${evmos.tokens} \n 
-        EVMOS RANK: ${evmos.rank} \n 
-        EVMOS BLOCK HEIGHT: ${evmos.block}`
-      );
+        `**STATUS**: ${evmos.status} \n 
+        **JAILED STATUS**: ${evmos.jailedStatus} \n
+        **TOKENS**: ${(Math.round(evmos.tokens / 1000000000000000000)).toLocaleString()} EVMOS \n 
+        **JACKAL RANK**: ${evmos.rank} out of 150 \n 
+        **BLOCK HEIGHT**: ${evmos.block} \n 
+        [Ping Dashboard Link](https://ping.pub/evmos/staking)`
+      )
+      .setThumbnail(`${evmos.image}`)
+      .setImage(`${evmos.banner}`)
+      .setTimestamp();
 
     // const secretEmbed = new EmbedBuilder()
     //   .setColor(0x000000)
     //   .setTitle(`SECRET`)
-    //   .setURL(`https://rekt.news`)
+    //   .setURL(`https://scrt.network`)
     //   .setDescription(
-    //     `SECRET STATUS: ${secret.status} \n 
-    //     SECRET JAILED STATUS: ${secret.jailedStatus} \n
-    //     SECRET TOKENS: ${secret.tokens} \n 
-    //     SECRET RANK: ${secret.rank} \n 
-    //     SECRET BLOCK HEIGHT: ${secret.block}`
+    //     `STATUS: ${secret.status} \n 
+    //     JAILED STATUS: ${secret.jailedStatus} \n
+    //     TOKENS: ${secret.tokens} \n 
+    //     JACKAL RANK: ${secret.rank} \n 
+    //     BLOCK HEIGHT: ${secret.block}`
     //   );
 
     await interaction.deleteReply();
