@@ -132,11 +132,11 @@ module.exports = {
       .setTitle(`JACKAL'S VALIDATOR ON AKASH`)
       .setURL(`https://akash.network`)
       .setDescription(
-        `**STATUS**: ${akash.status} \n 
-        **JAILED STATUS**: ${akash.jailedStatus} \n 
-        **TOKENS**: ${(Math.round(akash.tokens / 1000000)).toLocaleString()} AKT \n
-        **JACKAL RANK**: ${akash.rank} out of 100 \n 
-        **BLOCK HEIGHT**: ${akash.block} \n
+        `**STATUS:** ${akash.status} \n 
+        **JAILED STATUS:** ${akash.jailedStatus} \n 
+        **TOKENS:** ${(Math.round(akash.tokens / 1000000)).toLocaleString()} AKT \n
+        **JACKAL RANK:** ${akash.rank} out of 100 \n 
+        **BLOCK HEIGHT:** ${akash.block} \n
         [Ping Dashboard Link](https://ping.pub/akash/staking)`
       )
       .setThumbnail(`${akash.image}`)
@@ -147,11 +147,11 @@ module.exports = {
       .setTitle(`JACKAL'S VALIDATOR ON EVMOS`)
       .setURL(`https://evmos.org`)
       .setDescription(
-        `**STATUS**: ${evmos.status} \n 
-        **JAILED STATUS**: ${evmos.jailedStatus} \n
-        **TOKENS**: ${(Math.round(evmos.tokens / 1000000000000000000)).toLocaleString()} EVMOS \n 
-        **JACKAL RANK**: ${evmos.rank} out of 150 \n 
-        **BLOCK HEIGHT**: ${evmos.block} \n 
+        `**STATUS:** ${evmos.status} \n 
+        **JAILED STATUS:** ${evmos.jailedStatus} \n
+        **TOKENS:** ${(Math.round(evmos.tokens / 1000000000000000000)).toLocaleString()} EVMOS \n 
+        **JACKAL RANK:** ${evmos.rank} out of 150 \n 
+        **BLOCK HEIGHT:** ${evmos.block} \n 
         [Ping Dashboard Link](https://ping.pub/evmos/staking)`
       )
       .setThumbnail(`${evmos.image}`)

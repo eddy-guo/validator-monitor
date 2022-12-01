@@ -12,8 +12,8 @@ module.exports = {
     
     const response = await request("https://rekt.news/");
     const data = await response.body.text();
-    const title = parse(data).querySelectorAll(".post-title")[0].firstChild.rawText;
-    const post = parse(data).querySelectorAll(".post-excerpt")[0].rawText.slice(0, -4);
+    const title = parse(data).querySelectorAll(".post-title")[0].firstChild.structuredText;
+    const post = parse(data).querySelectorAll(".post-excerpt")[0].structuredText.slice(0, -4);
     const href = parse(data).querySelectorAll(".post-excerpt-more")[0].firstChild.attributes["href"];
 
     const rektEmbed = new EmbedBuilder()
