@@ -9,6 +9,7 @@
     "dotenv": "^16.0.3",
     "node-html-parser": "^6.1.4",
     "railway": "^2.0.17",
+    "redis": "^4.5.1",
     "undici": "^5.12.0"
   }
 }
