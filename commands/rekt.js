@@ -6,6 +6,7 @@ const { parse } = require("node-html-parser");
 // Redis setup
 const Redis = require("ioredis");
 
+
 const redis = new Redis({
   host: "redis-14719.c274.us-east-1-3.ec2.cloud.redislabs.com",
   port: 14719,
@@ -32,6 +33,20 @@ async function getRekt() {
   const title = parse(data).querySelectorAll(".post-title")[0].firstChild.structuredText;
   return title;
 }
+
+// cron setup
+var CronJob = require('cron').CronJob;
+var job = new CronJob (
+	'1 * * * * *',
+	function() {
+		console.log('You will see this message every second');
+	},
+	null,
+	true,
+	'America/Toronto'
+);
+// Use this if the 4th param is default value(false)
+// job.start()
 
 module.exports = {
   data: new SlashCommandBuilder()
