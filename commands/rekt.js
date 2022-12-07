@@ -6,44 +6,57 @@ const { parse } = require("node-html-parser");
 // Redis setup
 const Redis = require("ioredis");
 
-
 const redis = new Redis({
   host: "redis-14719.c274.us-east-1-3.ec2.cloud.redislabs.com",
   port: 14719,
   password: `${process.env.REDIS_PASSWORD}`,
 });
 
-// redis logic
-function getOrSetCache(key, callback) {
-  return new Promise((resolve, reject) => {
-    redis.get(key, async (err, reply) => {
-      if (err) return reject(err);
-      if (reply != null) return resolve(JSON.parse(reply));
-      const newData = await callback;
-      redis.setex(key, 30, JSON.stringify(newData));
-      resolve(newData);
-    })
-  })
-}
+// // redis set function - only needed once to have the old/current title in place, never again
+// function setCache() {
+//   return new Promise((resolve) => {
+//     async () => redis.set("rektTitle", getRekt());
+//     resolve("Cached");
+//   });
+// }
+// setCache();
 
-// helper to check title
+// helper: return title
 async function getRekt() {
   const response = await request("https://rekt.news/");
   const data = await response.body.text();
-  const title = parse(data).querySelectorAll(".post-title")[0].firstChild.structuredText;
+  const title =
+    parse(data).querySelectorAll(".post-title")[0].firstChild.structuredText;
   return title;
 }
 
+// helper: check difference between cache and rekt api call
+async function getDifference() {
+  const currTitle = await getRekt();
+  const cachedTitle = await redis.get("rektTitle", (err, reply) => {
+    if (err) throw err;
+    return reply;
+  });
+  if (currTitle == cachedTitle) {
+    console.log(currTitle);
+    console.log(cachedTitle);
+    console.log("No update");
+  } else {
+    console.log(currTitle);
+    console.log(cachedTitle);
+    console.log("Updated");
+    redis.set("rektTitle", currTitle);
+  }
+}
+
 // cron setup
-var CronJob = require('cron').CronJob;
-var job = new CronJob (
-	'1 * * * * *',
-	function() {
-		console.log('You will see this message every second');
-	},
-	null,
-	true,
-	'America/Toronto'
+var CronJob = require("cron").CronJob;
+var job = new CronJob(
+  "1 * * * * *",
+  async () => await getDifference(),
+  null,
+  true,
+  "America/Toronto"
 );
 // Use this if the 4th param is default value(false)
 // job.start()
@@ -55,8 +68,6 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
 
-    const rektResponse = await getOrSetCache(`rektTitle`, getRekt());
-    
     const response = await request("https://rekt.news/");
     const data = await response.body.text();
     const title = parse(data).querySelectorAll(".post-title")[0].firstChild.structuredText;

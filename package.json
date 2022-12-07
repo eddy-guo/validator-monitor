@@ -10,6 +10,7 @@
     "dotenv": "^16.0.3",
     "ioredis": "^5.2.4",
     "node-html-parser": "^6.1.4",
+    "node-schedule": "^2.1.0",
     "railway": "^2.0.17",
     "redis": "^4.5.1",
     "undici": "^5.12.0"
