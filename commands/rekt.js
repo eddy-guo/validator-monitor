@@ -2,6 +2,9 @@ const { SlashCommandBuilder } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
 const { parse } = require("node-html-parser");
+// client for message without interaction/slash commands
+const { Client, GatewayIntentBits } = require("discord.js");
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 // Redis setup
 const Redis = require("ioredis");
@@ -40,14 +43,18 @@ async function getDifference() {
   if (currTitle == cachedTitle) {
     console.log(currTitle);
     console.log(cachedTitle);
-    console.log("No update");
+    client.channels.cache.get("1046953428489883719").send("No Update");
+    console.log("No Update"); // make this a discord message (for testing)
   } else {
     console.log(currTitle);
     console.log(cachedTitle);
-    console.log("Updated");
+    client.channels.cache.get("1046953428489883719").send("Updated");
+    console.log("Updated"); // make this a discord message
     redis.set("rektTitle", currTitle);
   }
 }
+
+client.login(process.env.TOKEN);
 
 // cron setup
 var CronJob = require("cron").CronJob;
