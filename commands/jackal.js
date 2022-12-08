@@ -16,8 +16,10 @@ module.exports = {
       operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
       consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
       api: "https://api-akash-ia.cosmosia.notional.ventures",
-      image: "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676",
-      banner: "https://pbs.twimg.com/profile_banners/922670090834780162/1649432360/1500x500",
+      image:
+        "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676",
+      banner:
+        "https://pbs.twimg.com/profile_banners/922670090834780162/1649432360/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -28,8 +30,10 @@ module.exports = {
       operator_address: "evmosvaloper1fpjf8aywxg9qxexfwu9lanlgw58f5fhqfu348k",
       consensus_address: "evmosvalcons1tu64shxp6m94nsc5uefs3agay8gjne0r0t0ux3",
       api: "https://evmos-api.polkachu.com",
-      image: "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927",
-      banner: "https://pbs.twimg.com/profile_banners/921975418315448321/1648257433/1500x500",
+      image:
+        "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927",
+      banner:
+        "https://pbs.twimg.com/profile_banners/921975418315448321/1648257433/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -40,8 +44,10 @@ module.exports = {
       operator_address: "secretvaloper1vp05jj9t0u228j3ph8qav642mh84lp2q6r8vhx",
       consensus_address: "secretvalcons1qz6dgmf0rgk8p08wznlnmqe7hnm4qydftvaajj",
       api: "https://api.scrt.network",
-      image: "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186",
-      banner: "https://pbs.twimg.com/profile_banners/3305325070/1642007357/1500x500",
+      image:
+        "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186",
+      banner:
+        "https://pbs.twimg.com/profile_banners/3305325070/1642007357/1500x500",
       status: "",
       jailedStatus: "",
       tokens: "",
@@ -116,7 +122,9 @@ module.exports = {
     // secret.rank = await getRank(secret);
 
     async function getValidatorStatus(chain) {
-      const response = await request(`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
+      const response = await request(
+        `${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`
+      );
       const data = (await response.body.json())["validator"];
       chain.status = data["status"];
       chain.jailedStatus = data["jailed"];
@@ -134,7 +142,9 @@ module.exports = {
       .setDescription(
         `**STATUS:** ${akash.status} \n 
         **JAILED STATUS:** ${akash.jailedStatus} \n 
-        **TOKENS:** ${(Math.round(akash.tokens / 1000000)).toLocaleString()} AKT \n
+        **TOKENS:** ${Math.round(
+          akash.tokens / 1000000
+        ).toLocaleString()} AKT \n
         **JACKAL RANK:** ${akash.rank} out of 100 \n 
         **BLOCK HEIGHT:** ${akash.block} \n
         [Ping Dashboard Link](https://ping.pub/akash/staking)`
@@ -149,7 +159,9 @@ module.exports = {
       .setDescription(
         `**STATUS:** ${evmos.status} \n 
         **JAILED STATUS:** ${evmos.jailedStatus} \n
-        **TOKENS:** ${(Math.round(evmos.tokens / 1000000000000000000)).toLocaleString()} EVMOS \n 
+        **TOKENS:** ${Math.round(
+          evmos.tokens / 1000000000000000000
+        ).toLocaleString()} EVMOS \n 
         **JACKAL RANK:** ${evmos.rank} out of 150 \n 
         **BLOCK HEIGHT:** ${evmos.block} \n 
         [Ping Dashboard Link](https://ping.pub/evmos/staking)`
@@ -163,10 +175,10 @@ module.exports = {
     //   .setTitle(`SECRET`)
     //   .setURL(`https://scrt.network`)
     //   .setDescription(
-    //     `STATUS: ${secret.status} \n 
+    //     `STATUS: ${secret.status} \n
     //     JAILED STATUS: ${secret.jailedStatus} \n
-    //     TOKENS: ${secret.tokens} \n 
-    //     JACKAL RANK: ${secret.rank} \n 
+    //     TOKENS: ${secret.tokens} \n
+    //     JACKAL RANK: ${secret.rank} \n
     //     BLOCK HEIGHT: ${secret.block}`
     //   );
 
