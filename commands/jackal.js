@@ -1,7 +1,130 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { EmbedBuilder } = require("discord.js");
 const { request } = require("undici");
-// const wait = require("node:timers/promises").setTimeout;
+// client for message without interaction/slash commands
+const { Client, GatewayIntentBits } = require("discord.js");
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+
+// Redis setup
+const Redis = require("ioredis");
+
+const redis = new Redis({
+  host: "redis-14719.c274.us-east-1-3.ec2.cloud.redislabs.com",
+  port: 14719,
+  password: `${process.env.REDIS_PASSWORD}`,
+});
+
+// global objects
+const akash = {
+  operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
+  consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
+  api: "https://api-akash-ia.cosmosia.notional.ventures",
+  image:
+    "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676",
+  banner:
+    "https://pbs.twimg.com/profile_banners/922670090834780162/1649432360/1500x500",
+  status: "",
+  jailedStatus: "",
+  tokens: "",
+  rank: "",
+  block: "",
+};
+const evmos = {
+  operator_address: "evmosvaloper1fpjf8aywxg9qxexfwu9lanlgw58f5fhqfu348k",
+  consensus_address: "evmosvalcons1tu64shxp6m94nsc5uefs3agay8gjne0r0t0ux3",
+  api: "https://evmos-api.polkachu.com",
+  image:
+    "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927",
+  banner:
+    "https://pbs.twimg.com/profile_banners/921975418315448321/1648257433/1500x500",
+  status: "",
+  jailedStatus: "",
+  tokens: "",
+  rank: "",
+  block: "",
+};
+const secret = {
+  operator_address: "secretvaloper1vp05jj9t0u228j3ph8qav642mh84lp2q6r8vhx",
+  consensus_address: "secretvalcons1qz6dgmf0rgk8p08wznlnmqe7hnm4qydftvaajj",
+  api: "https://api.scrt.network",
+  image:
+    "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186",
+  banner:
+    "https://pbs.twimg.com/profile_banners/3305325070/1642007357/1500x500",
+  status: "",
+  jailedStatus: "",
+  tokens: "",
+  rank: "",
+  block: "",
+};
+
+async function checkAkashStatus() {
+  // api setup
+  const akashResponse = await request(
+    "https://api-akash-ia.cosmosia.notional.ventures/cosmos/staking/v1beta1/validators/akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv"
+  );
+  const akashData = (await akashResponse.body.json())["validator"];
+  // check difference
+  // remember that the previous data should already be cached, if not an extra message will send
+  const currAkashStatus = akashData["status"];
+  const cachedAkashStatus = await redis.get("akashStatus", (err, reply) => {
+    if (err) throw err;
+    return reply;
+  });
+  // embed setup
+  const akashStatusEmbed = new EmbedBuilder()
+  .setColor(0x000000)
+  .setTitle("AKASH STATUS CHANGE (URGENT)")
+  .setURL(`${akash.api}`)
+  .setDescription(`STATUS: **${currAkashStatus}**`)
+  .setThumbnail(`${akash.image}`)
+  .setTimestamp();
+
+  if (currAkashStatus == cachedAkashStatus) {
+    console.log(`Current Akash Status: ${currAkashStatus} \nCached Akash Status: ${cachedAkashStatus} \nNo Update.`);
+    // client.channels.cache.get("1046953428489883719").send("No Update");
+  } else {
+    console.log(`Current Akash Status: ${currAkashStatus} \nCached Akash Status: ${cachedAkashStatus} \nUpdated!`);
+    client.channels.cache.get("1046953428489883719").send({ embeds: [akashStatusEmbed] });
+    redis.set("akashStatus", currAkashStatus);
+  }
+
+  const currAkashJailedStatus = akashData["jailed"];
+  const cachedAkashJailedStatus = await redis.get("akashJailedStatus", (err, reply) => {
+    if (err) throw err;
+    return reply;
+  });
+  const akashJailedStatusEmbed = new EmbedBuilder()
+  .setColor(0x000000)
+  .setTitle("AKASH JAILED STATUS CHANGE (URGENT)")
+  .setURL(`${akash.api}`)
+  .setDescription(`JAILED: **${currAkashJailedStatus}**`)
+  .setThumbnail(`${akash.image}`)
+  .setTimestamp();
+  
+  if (currAkashJailedStatus == cachedAkashJailedStatus) {
+    console.log(`Current Akash Jailed Status: ${currAkashJailedStatus} \nCached Akash Jailed Status: ${cachedAkashJailedStatus} \nNo Update.`);
+    // client.channels.cache.get("1046953428489883719").send("No Update");
+  } else {
+    console.log(`Current Akash Jailed Status: ${currAkashJailedStatus} \nCached Akash Jailed Status: ${cachedAkashJailedStatus} \nUpdated!`);
+    client.channels.cache.get("1046953428489883719").send({ embeds: [akashJailedStatusEmbed] });
+    redis.set("akashJailedStatus", currAkashJailedStatus);
+  }
+}
+
+// cron setup
+var CronJob = require("cron").CronJob;
+var job = new CronJob(
+  "1 * * * * *",
+  async () => await checkAkashStatus(),
+  null,
+  true,
+  "America/Toronto"
+);
+// Use this if the 4th param is default value(false)
+// job.start()
+
+client.login(process.env.TOKEN);
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -11,49 +134,6 @@ module.exports = {
     ),
   async execute(interaction) {
     await interaction.deferReply();
-
-    const akash = {
-      operator_address: "akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv",
-      consensus_address: "akashvalcons1au2nql99wn2k27qt8fzlj9anzksj22typhcywv",
-      api: "https://api-akash-ia.cosmosia.notional.ventures",
-      image:
-        "https://assets.coingecko.com/coins/images/12785/small/akash-logo.png?1615447676",
-      banner:
-        "https://pbs.twimg.com/profile_banners/922670090834780162/1649432360/1500x500",
-      status: "",
-      jailedStatus: "",
-      tokens: "",
-      rank: "",
-      block: "",
-    };
-    const evmos = {
-      operator_address: "evmosvaloper1fpjf8aywxg9qxexfwu9lanlgw58f5fhqfu348k",
-      consensus_address: "evmosvalcons1tu64shxp6m94nsc5uefs3agay8gjne0r0t0ux3",
-      api: "https://evmos-api.polkachu.com",
-      image:
-        "https://assets.coingecko.com/coins/images/24023/small/evmos.png?1653958927",
-      banner:
-        "https://pbs.twimg.com/profile_banners/921975418315448321/1648257433/1500x500",
-      status: "",
-      jailedStatus: "",
-      tokens: "",
-      rank: "",
-      block: "",
-    };
-    const secret = {
-      operator_address: "secretvaloper1vp05jj9t0u228j3ph8qav642mh84lp2q6r8vhx",
-      consensus_address: "secretvalcons1qz6dgmf0rgk8p08wznlnmqe7hnm4qydftvaajj",
-      api: "https://api.scrt.network",
-      image:
-        "https://assets.coingecko.com/coins/images/11871/small/Secret.png?1595520186",
-      banner:
-        "https://pbs.twimg.com/profile_banners/3305325070/1642007357/1500x500",
-      status: "",
-      jailedStatus: "",
-      tokens: "",
-      rank: "",
-      block: "",
-    };
 
     async function getCurrentBlock(api) {
       const response = await request(`${api}/blocks/latest`);
