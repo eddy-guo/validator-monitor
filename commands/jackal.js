@@ -80,7 +80,7 @@ async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
     console.log(`${embedTitle}: No update.`);
   } else {
     console.log(`${embedTitle}: Updated!`);
-    client.channels.cache.get("1046953428489883719").send({ embeds: [chainEmbed] });
+    client.channels.cache.get("1047185668901720084").send({ embeds: [chainEmbed] });
     redis.set(cacheTitle, current);
   }
 }
@@ -90,8 +90,8 @@ async function main() {
   getChainStatus(akash, "jailed", "akashJailed", "AKASH JAILED STATUS UPDATE", "JAILED");
   getChainStatus(evmos, "status", "evmosStatus", "EVMOS STATUS UPDATE", "STATUS");
   getChainStatus(evmos, "jailed", "evmosJailed", "EVMOS JAILED STATUS UPDATE", "JAILED");
-  getChainStatus(secret, "status", "secretStatus", "SECRET STATUS UPDATE", "STATUS");
-  getChainStatus(secret, "jailed", "secretJailed", "SECRET JAILED STATUS UPDATE", "JAILED");
+  // getChainStatus(secret, "status", "secretStatus", "SECRET STATUS UPDATE", "STATUS");
+  // getChainStatus(secret, "jailed", "secretJailed", "SECRET JAILED STATUS UPDATE", "JAILED");
 }
 
 // cron setup
