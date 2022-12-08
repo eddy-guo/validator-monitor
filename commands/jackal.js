@@ -59,7 +59,9 @@ const secret = {
 };
 
 async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
-  const response = await request (`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
+  const response = await request(
+    `${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`
+  );
   const data = (await response.body.json())["validator"];
 
   const current = data[key].toString();
@@ -69,27 +71,55 @@ async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
   });
 
   const chainEmbed = new EmbedBuilder()
-  .setColor(0x000000)
-  .setTitle(embedTitle)
-  .setURL(`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`)
-  .setDescription(`${info}: **${current}**`)
-  .setThumbnail(`${chain.image}`)
-  .setTimestamp();
+    .setColor(0x000000)
+    .setTitle(embedTitle)
+    .setURL(
+      `${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`
+    )
+    .setDescription(`${info}: **${current}**`)
+    .setThumbnail(`${chain.image}`)
+    .setTimestamp();
 
   if (current == cached) {
     console.log(`${embedTitle}: No update.`);
   } else {
     console.log(`${embedTitle}: Updated!`);
-    client.channels.cache.get("1047185668901720084").send({ embeds: [chainEmbed] });
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [chainEmbed] });
     redis.set(cacheTitle, current);
   }
 }
 
 async function main() {
-  getChainStatus(akash, "status", "akashStatus", "AKASH STATUS UPDATE", "STATUS");
-  getChainStatus(akash, "jailed", "akashJailed", "AKASH JAILED STATUS UPDATE", "JAILED");
-  getChainStatus(evmos, "status", "evmosStatus", "EVMOS STATUS UPDATE", "STATUS");
-  getChainStatus(evmos, "jailed", "evmosJailed", "EVMOS JAILED STATUS UPDATE", "JAILED");
+  getChainStatus(
+    akash,
+    "status",
+    "akashStatus",
+    "AKASH STATUS UPDATE",
+    "STATUS"
+  );
+  getChainStatus(
+    akash,
+    "jailed",
+    "akashJailed",
+    "AKASH JAILED STATUS UPDATE",
+    "JAILED"
+  );
+  getChainStatus(
+    evmos,
+    "status",
+    "evmosStatus",
+    "EVMOS STATUS UPDATE",
+    "STATUS"
+  );
+  getChainStatus(
+    evmos,
+    "jailed",
+    "evmosJailed",
+    "EVMOS JAILED STATUS UPDATE",
+    "JAILED"
+  );
   // getChainStatus(secret, "status", "secretStatus", "SECRET STATUS UPDATE", "STATUS");
   // getChainStatus(secret, "jailed", "secretJailed", "SECRET JAILED STATUS UPDATE", "JAILED");
 }

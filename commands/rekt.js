@@ -59,12 +59,10 @@ async function getDifference() {
     console.log(
       `Current Title: ${currTitle} \nCached Title: ${cachedTitle} \nUpdated!`
     );
-    client.channels.cache
-      .get("1047185668901720084")
-      .send({
-        content: "**New Rekt article out now** :arrow_lower_left:",
-        embeds: [rektEmbed],
-      });
+    client.channels.cache.get("1047185668901720084").send({
+      content: "**New Rekt article out now** :arrow_lower_left:",
+      embeds: [rektEmbed],
+    });
     redis.set("rektTitle", currTitle);
   }
 }
