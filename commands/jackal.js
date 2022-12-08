@@ -62,7 +62,7 @@ async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
   const response = await request (`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
   const data = (await response.body.json())["validator"];
 
-  const current = data[key];
+  const current = data[key].toString();
   const cached = await redis.get(cacheTitle, (err, reply) => {
     if (err) throw err;
     return reply;
