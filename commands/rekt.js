@@ -54,8 +54,6 @@ async function getDifference() {
   }
 }
 
-client.login(process.env.TOKEN);
-
 // cron setup
 var CronJob = require("cron").CronJob;
 var job = new CronJob(
@@ -67,6 +65,8 @@ var job = new CronJob(
 );
 // Use this if the 4th param is default value(false)
 // job.start()
+
+client.login(process.env.TOKEN);
 
 module.exports = {
   data: new SlashCommandBuilder()

@@ -1,1 +1,1 @@
-Worker: node -r dotenv/config deploy-commands.js & npm start
+web: node -r dotenv/config deploy-commands.js & npm start
