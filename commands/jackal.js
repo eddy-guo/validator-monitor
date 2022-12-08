@@ -58,65 +58,47 @@ const secret = {
   block: "",
 };
 
-async function checkAkashStatus() {
-  // api setup
-  const akashResponse = await request(
-    "https://api-akash-ia.cosmosia.notional.ventures/cosmos/staking/v1beta1/validators/akashvaloper1mryswr20mxltwhlqulsk0hnscmmxw32th0szkv"
-  );
-  const akashData = (await akashResponse.body.json())["validator"];
-  // check difference
-  // remember that the previous data should already be cached, if not an extra message will send
-  const currAkashStatus = akashData["status"];
-  const cachedAkashStatus = await redis.get("akashStatus", (err, reply) => {
+async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
+  const response = await request (`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`);
+  const data = (await response.body.json())["validator"];
+
+  const current = data[key];
+  const cached = await redis.get(cacheTitle, (err, reply) => {
     if (err) throw err;
     return reply;
   });
-  // embed setup
-  const akashStatusEmbed = new EmbedBuilder()
+
+  const chainEmbed = new EmbedBuilder()
   .setColor(0x000000)
-  .setTitle("AKASH STATUS CHANGE (URGENT)")
-  .setURL(`${akash.api}`)
-  .setDescription(`STATUS: **${currAkashStatus}**`)
-  .setThumbnail(`${akash.image}`)
+  .setTitle(embedTitle)
+  .setURL(`${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`)
+  .setDescription(`${info}: **${current}**`)
+  .setThumbnail(`${chain.image}`)
   .setTimestamp();
 
-  if (currAkashStatus == cachedAkashStatus) {
-    console.log(`Current Akash Status: ${currAkashStatus} \nCached Akash Status: ${cachedAkashStatus} \nNo Update.`);
-    // client.channels.cache.get("1046953428489883719").send("No Update");
+  if (current == cached) {
+    console.log(`${embedTitle}: No update.`);
   } else {
-    console.log(`Current Akash Status: ${currAkashStatus} \nCached Akash Status: ${cachedAkashStatus} \nUpdated!`);
-    client.channels.cache.get("1046953428489883719").send({ embeds: [akashStatusEmbed] });
-    redis.set("akashStatus", currAkashStatus);
+    console.log(`${embedTitle}: Updated!`);
+    client.channels.cache.get("1046953428489883719").send({ embeds: [chainEmbed] });
+    redis.set(cacheTitle, current);
   }
+}
 
-  const currAkashJailedStatus = akashData["jailed"];
-  const cachedAkashJailedStatus = await redis.get("akashJailedStatus", (err, reply) => {
-    if (err) throw err;
-    return reply;
-  });
-  const akashJailedStatusEmbed = new EmbedBuilder()
-  .setColor(0x000000)
-  .setTitle("AKASH JAILED STATUS CHANGE (URGENT)")
-  .setURL(`${akash.api}`)
-  .setDescription(`JAILED: **${currAkashJailedStatus}**`)
-  .setThumbnail(`${akash.image}`)
-  .setTimestamp();
-  
-  if (currAkashJailedStatus == cachedAkashJailedStatus) {
-    console.log(`Current Akash Jailed Status: ${currAkashJailedStatus} \nCached Akash Jailed Status: ${cachedAkashJailedStatus} \nNo Update.`);
-    // client.channels.cache.get("1046953428489883719").send("No Update");
-  } else {
-    console.log(`Current Akash Jailed Status: ${currAkashJailedStatus} \nCached Akash Jailed Status: ${cachedAkashJailedStatus} \nUpdated!`);
-    client.channels.cache.get("1046953428489883719").send({ embeds: [akashJailedStatusEmbed] });
-    redis.set("akashJailedStatus", currAkashJailedStatus);
-  }
+async function main() {
+  getChainStatus(akash, "status", "akashStatus", "AKASH STATUS UPDATE", "STATUS");
+  getChainStatus(akash, "jailed", "akashJailed", "AKASH JAILED STATUS UPDATE", "JAILED");
+  getChainStatus(evmos, "status", "evmosStatus", "EVMOS STATUS UPDATE", "STATUS");
+  getChainStatus(evmos, "jailed", "evmosJailed", "EVMOS JAILED STATUS UPDATE", "JAILED");
+  getChainStatus(secret, "status", "secretStatus", "SECRET STATUS UPDATE", "STATUS");
+  getChainStatus(secret, "jailed", "secretJailed", "SECRET JAILED STATUS UPDATE", "JAILED");
 }
 
 // cron setup
 var CronJob = require("cron").CronJob;
 var job = new CronJob(
   "1 * * * * *",
-  async () => await checkAkashStatus(),
+  async () => await main(),
   null,
   true,
   "America/Toronto"
