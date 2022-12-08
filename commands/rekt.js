@@ -44,7 +44,7 @@ async function getDifference() {
     .setTimestamp();
 
   // check difference
-  // remember that the previous title should already be cached, if not an extra article will send
+  // remember that the previous data should already be cached, if not an extra message will send
   const currTitle = title;
   const cachedTitle = await redis.get("rektTitle", (err, reply) => {
     if (err) throw err;
