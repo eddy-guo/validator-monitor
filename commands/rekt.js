@@ -51,26 +51,21 @@ async function getDifference() {
     return reply;
   });
   if (currTitle == cachedTitle) {
-    console.log(
-      `Current Title: ${currTitle} \nCached Title: ${cachedTitle} \nNo Update.`
-    );
-    // client.channels.cache.get("1046953428489883719").send("No Update");
+    console.log(`REKT: No Update.`);
   } else {
-    console.log(
-      `Current Title: ${currTitle} \nCached Title: ${cachedTitle} \nUpdated!`
-    );
     client.channels.cache.get("1047185668901720084").send({
       content: "**New Rekt article out now** :arrow_lower_left:",
       embeds: [rektEmbed],
     });
     redis.set("rektTitle", currTitle);
+    console.log(`REKT: Updated!`);
   }
 }
 
 // cron setup
 var CronJob = require("cron").CronJob;
 var job = new CronJob(
-  "1 * * * * *",
+  "0 0 * * * *",
   async () => await getDifference(),
   null,
   true,
