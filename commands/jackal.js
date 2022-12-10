@@ -58,7 +58,7 @@ const secret = {
   block: "",
 };
 
-async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
+async function getChainStatus(chain, key, cacheTitle, embedTitle) {
   const response = await request(
     `${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`
   );
@@ -72,22 +72,55 @@ async function getChainStatus(chain, key, cacheTitle, embedTitle, info) {
 
   const chainEmbed = new EmbedBuilder()
     .setColor(0x000000)
-    .setTitle(embedTitle)
-    .setURL(
-      `${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address}`
-    )
-    .setDescription(`${info}: **${current}**`)
+    // .setTitle()
+    .setDescription(`${key}: [**${current}**](${chain.api}/cosmos/staking/v1beta1/validators/${chain.operator_address})`) 
     .setThumbnail(`${chain.image}`)
     .setTimestamp();
 
   if (current == cached) {
     console.log(`${embedTitle}: No update.`);
-  } else {
-    console.log(`${embedTitle}: Updated!`);
+  } else if (current == "false") {
+    const tempEmbed = chainEmbed.setTitle(`:white_check_mark: UPDATE: ${embedTitle} VALIDATOR IS UNJAILED :white_check_mark:`);
     client.channels.cache
       .get("1047185668901720084")
-      .send({ embeds: [chainEmbed] });
+      .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Jailed: false`);
+  } else if (current == "true") {
+    const tempEmbed = chainEmbed.setTitle(`:no_entry_sign: UPDATE: ${embedTitle} VALIDATOR IS JAILED :no_entry_sign:`);
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [tempEmbed] });
+    redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Jailed: true`);
+  } else if (current == "BOND_STATUS_BONDED") {
+    const tempEmbed = chainEmbed.setTitle(`:green_circle: UPDATE: ${embedTitle} VALIDATOR IS BONDED :green_circle:`);
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [tempEmbed] });
+    redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Status: Bonded`);
+  } else if (current == "BOND_STATUS_UNBONDING") {
+    const tempEmbed = chainEmbed.setTitle(`:yellow_circle: UPDATE: ${embedTitle} VALIDATOR IS UNBONDING :yellow_circle:`);
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [tempEmbed] });
+    redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Status: Unbonding`);
+  } else if (current == "BOND_STATUS_UNBONDED") {
+    const tempEmbed = chainEmbed.setTitle(`:red_circle: UPDATE: ${embedTitle} VALIDATOR IS UNBONDED :red_circle:`);
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [tempEmbed] });
+    redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Status: Unbonded`);
+  } else if (current == "BOND_STATUS_UNSPECIFIED") {
+    const tempEmbed = chainEmbed.setTitle(`:purple_circle: UPDATE: ${embedTitle} VALIDATOR IS INVALID :purple_circle:`);
+    client.channels.cache
+      .get("1047185668901720084")
+      .send({ embeds: [tempEmbed] });
+    redis.set(cacheTitle, current);
+    console.log(`${embedTitle} Status: Unspecified`);
   }
 }
 
@@ -96,38 +129,33 @@ async function main() {
     akash,
     "status",
     "akashStatus",
-    "AKASH STATUS UPDATE",
-    "STATUS"
+    "AKASH",
   );
   getChainStatus(
     akash,
     "jailed",
     "akashJailed",
-    "AKASH JAILED STATUS UPDATE",
-    "JAILED"
+    "AKASH",
   );
   getChainStatus(
     evmos,
     "status",
     "evmosStatus",
-    "EVMOS STATUS UPDATE",
-    "STATUS"
+    "EVMOS",
   );
   getChainStatus(
     evmos,
     "jailed",
     "evmosJailed",
-    "EVMOS JAILED STATUS UPDATE",
-    "JAILED"
+    "EVMOS",
   );
-  // getChainStatus(secret, "status", "secretStatus", "SECRET STATUS UPDATE", "STATUS");
-  // getChainStatus(secret, "jailed", "secretJailed", "SECRET JAILED STATUS UPDATE", "JAILED");
+  // remember to add secret (when they decide to start working...)
 }
 
 // cron setup
 var CronJob = require("cron").CronJob;
 var job = new CronJob(
-  "1 * * * * *",
+  "*/30 * * * * *",
   async () => await main(),
   null,
   true,
