@@ -53,7 +53,7 @@ async function getDifference() {
   if (currTitle == cachedTitle) {
     console.log(`REKT: No Update.`);
   } else {
-    client.channels.cache.get("1047185668901720084").send({
+    client.channels.cache.get("1046953428489883719").send({
       content: "**New Rekt article out now** :arrow_lower_left:",
       embeds: [rektEmbed],
     });
@@ -65,7 +65,7 @@ async function getDifference() {
 // cron setup
 var CronJob = require("cron").CronJob;
 var job = new CronJob(
-  "0 0 * * * *",
+  "0 * * * * *",
   async () => await getDifference(),
   null,
   true,

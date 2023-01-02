@@ -82,42 +82,42 @@ async function getChainStatus(chain, key, cacheTitle, embedTitle) {
   } else if (current == "false") {
     const tempEmbed = chainEmbed.setTitle(`:white_check_mark: UPDATE: ${embedTitle} VALIDATOR IS UNJAILED :white_check_mark:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Jailed: false`);
   } else if (current == "true") {
     const tempEmbed = chainEmbed.setTitle(`:no_entry_sign: UPDATE: ${embedTitle} VALIDATOR IS JAILED :no_entry_sign:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Jailed: true`);
   } else if (current == "BOND_STATUS_BONDED") {
     const tempEmbed = chainEmbed.setTitle(`:green_circle: UPDATE: ${embedTitle} VALIDATOR IS BONDED :green_circle:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Status: Bonded`);
   } else if (current == "BOND_STATUS_UNBONDING") {
     const tempEmbed = chainEmbed.setTitle(`:yellow_circle: UPDATE: ${embedTitle} VALIDATOR IS UNBONDING :yellow_circle:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Status: Unbonding`);
   } else if (current == "BOND_STATUS_UNBONDED") {
     const tempEmbed = chainEmbed.setTitle(`:red_circle: UPDATE: ${embedTitle} VALIDATOR IS UNBONDED :red_circle:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Status: Unbonded`);
   } else if (current == "BOND_STATUS_UNSPECIFIED") {
     const tempEmbed = chainEmbed.setTitle(`:purple_circle: UPDATE: ${embedTitle} VALIDATOR IS INVALID :purple_circle:`);
     client.channels.cache
-      .get("1047185668901720084")
+      .get("1046953428489883719")
       .send({ embeds: [tempEmbed] });
     redis.set(cacheTitle, current);
     console.log(`${embedTitle} Status: Unspecified`);
